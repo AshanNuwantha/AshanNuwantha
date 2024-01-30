@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>MQTT Node Subscriber</title>
+    <link rel="stylesheet" href="/pageAccessFiles/subscriber/subscriber.css" />
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  </head>
+  <body>
+    <h1>MQTT Node Subscriber</h1>
+    <div class="line"></div>
+    <ul class="wrapper">
+      <li class="form-row">
+        <label for="topic">Topic</label>
+        <input type="text" id="topic" />
+      </li>
+      <li class="form-row">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="10" readonly></textarea>
+      </li>
+      <li class="form-row">
+        <label for="status">Status</label>
+        <input type="text" id="status" readonly />
+      </li>
+      <li class="form-row">
+          <button type="button" id="subscribe">Subscribe</button>
+      </li>
+    </ul>
+    <script>
+      // inner js code connection with Mqtt broker
+      let mqttClient;
+
+      window.addEventListener("load", (event) => {
+        connectToBroker();
+
+        const subscribeBtn = document.querySelector("#subscribe");
+        subscribeBtn.addEventListener("click", function () {
+          subscribeToTopic();
+        });
+
+      });
+
+      function connectToBroker() {
+        const clientId = "client" + Math.random().toString(36).substring(7);
+
+        // Change this to point to your MQTT broker
+        const host = "mqtt://192.168.1.21:9001";
+
+        const options = {
+          keepalive: 60,
+          clientId: clientId,
+          protocolId: "MQTT",
+          protocolVersion: 4,
+          clean: true,
+          reconnectPeriod: 1000,
+          connectTimeout: 30 * 1000,
+        };
+
+        mqttClient = mqtt.connect(host, options);
+
+        mqttClient.on("error", (err) => {
+          console.log("Error: ", err);
+          mqttClient.end();
+        });
+
+        mqttClient.on("reconnect", () => {
+          console.log("Reconnecting...");
+        });
+
+        mqttClient.on("connect", () => {
+          console.log("Client connected:" + clientId);
+        });
+
+        // Received
+        mqttClient.on("message", (topic, message, packet) => {
+          console.log(
+            "Received Message: " + message.toString() + "\nOn topic: " + topic
+          );
+          const messageTextArea = document.querySelector("#message");
+          messageTextArea.value += message + "\r\n";
+        });
+      }
+
+      function subscribeToTopic() {
+        const status = document.querySelector("#status");
+        const topic = document.querySelector("#topic").value.trim();
+        console.log("Subscribing to Topic: ${topic}");
+
+        mqttClient.subscribe(topic, { qos: 0 });
+        status.style.color = "green";
+        status.value = "SUBSCRIBED";
+      }
+
+    </script>
+  </body>
+</html>

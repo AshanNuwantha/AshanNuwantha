@@ -1,0 +1,79 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+.line {
+  border: 3px solid red;
+  width: 200px;
+}
+
+/****** Styling for the Layout ***********/
+.wrapper {
+  background-color: rgb(247, 244, 244);
+  list-style-type: none;
+  padding: 0;
+  border-radius: 5px;
+}
+.form-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5em;
+}
+.form-row > label {
+  padding: 1em;
+  flex: 1;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.form-row > input {
+  flex: 2;
+}
+
+.form-row > input {
+  padding: 1em;
+  margin: 10px 0;
+  box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  font-size: 1.2em;
+}
+.form-row > button {
+  padding: 1em;
+  margin: 10px 75%;
+  box-shadow: 0 0 20px 6px rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  font-size: 2em;
+  margin-right: auto;
+}
+.form-row > button {
+  background-color: #19724d;
+  color: rgb(12, 12, 12);
+  border: 0;
+  flex: 3;
+  font-weight: 600;
+}
+.publish span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.publish span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.publish:hover span {
+  padding-right: 25px;
+}
+
+.publish:hover span:after {
+  opacity: 1;
+  right: 0;
+}
